@@ -222,9 +222,9 @@ static int fdata_open(file_data *fdata, const char *filename, mix_modes mixmode,
 			time_t now = time(NULL);
 			if (now > st.st_mtime ) {
 				time_t delta = now - st.st_mtime;
-				if (delta > 3600) {
-					log(LOG_WARNING, "Too big time difference: %llu sec, limiting to one hour\n", (unsigned long long)delta);
-					delta = 3600;
+				if (delta > 60) {
+					log(LOG_WARNING, "Too big time difference: %llu sec, limiting to one minute\n", (unsigned long long)delta);
+					delta = 60;
 				}
 				LameTone lt_silence(mixmode, 1000);
 				for (; (r==0 && delta > 1); --delta)
@@ -302,7 +302,7 @@ void process_outputs(channel_t *channel, int cur_scan_freq) {
 
 			char suffix[32];
 			if(strftime(suffix, sizeof(suffix),
-				channel->outputs[k].type == O_FILE ? "_%Y%m%d_%H.mp3" : "_%Y%m%d_%H.cs16",
+				channel->outputs[k].type == O_FILE ? "_%Y%m%d_%H%M.mp3" : "_%Y%m%d_%H%M.cs16",
 			tmp) == 0) {
 				log(LOG_NOTICE, "strftime returned 0\n");
 				continue;
